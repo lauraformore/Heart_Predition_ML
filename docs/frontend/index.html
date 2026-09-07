@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predicción de Enfermedad Cardíaca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F6FFEA;
+    --panel: #FFFFFF;
+    --peach: #FFDE96;
+    --coral: #FA855A;
+    --tomato: #C93638;
+    --sky: #62C4DA;
+    --text: #33302A;
+    --text-muted: #8A8478;
+    --border: #ECE6D6;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 48px 20px;
+  }
+
+  .card {
+    background: var(--panel);
+    width: 100%;
+    max-width: 560px;
+    border-radius: 22px;
+    padding: 40px 40px 32px;
+    box-shadow: 0 20px 40px -20px rgba(201, 54, 56, 0.18);
+  }
+
+  header {
+    margin-bottom: 28px;
+  }
+
+  header p.eyebrow {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: var(--coral);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    line-height: 1.15;
+    margin: 0 0 8px;
+  }
+
+  header p.sub {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14.5px;
+    max-width: 46ch;
+  }
+
+  fieldset {
+    border: none;
+    border-left: 3px solid var(--peach);
+    padding: 4px 0 4px 18px;
+    margin: 0 0 26px;
+  }
+
+  fieldset legend {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 0 0 14px;
+    color: var(--text);
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  input, select {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: #FEFEFC;
+    color: var(--text);
+    transition: border-color 0.15s ease;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--sky);
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 6px;
+    background: var(--coral);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  button:hover { background: #E96F44; }
+
+  #resultado {
+    margin-top: 22px;
+    padding: 18px 20px;
+    border-radius: 14px;
+    display: none;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  #resultado .titulo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  #resultado.riesgo-bajo {
+    background: rgba(98, 196, 218, 0.15);
+    border: 1.5px solid rgba(98, 196, 218, 0.4);
+    color: #2C6E7F;
+  }
+
+  #resultado.riesgo-alto {
+    background: rgba(201, 54, 56, 0.08);
+    border: 1.5px solid rgba(201, 54, 56, 0.35);
+    color: var(--tomato);
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <p class="eyebrow">Heart Disease MLOps</p>
+      <h1>Evalúa el riesgo cardíaco de un paciente</h1>
+      <p class="sub">Completa los datos clínicos y el modelo entrenado calcula la probabilidad de enfermedad cardíaca.</p>
+    </header>
+
+    <form id="formulario">
+      <fieldset>
+        <legend>Datos personales</legend>
+        <div class="row-2">
+          <div class="field">
+            <label for="Age">Edad</label>
+            <input type="number" id="Age" required>
+          </div>
+          <div class="field">
+            <label for="Sex">Sexo</label>
+            <select id="Sex">
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Signos vitales</legend>
+        <div class="row-2">
+          <div class="field">
+            <label for="RestingBP">Presión en reposo</label>
+            <input type="number" id="RestingBP" required>
+          </div>
+          <div class="field">
+            <label for="Cholesterol">Colesterol</label>
+            <input type="number" id="Cholesterol" required>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="MaxHR">Frecuencia cardíaca máxima</label>
+            <input type="number" id="MaxHR" required>
+          </div>
+          <div class="field">
+            <label for="FastingBS">Azúcar en ayuno &gt; 120 mg/dl</label>
+            <select id="FastingBS">
+              <option value="0">No</option>
+              <option value="1">Sí</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="RestingECG">Electrocardiograma en reposo</label>
+          <select id="RestingECG">
+            <option value="Normal">Normal</option>
+            <option value="ST">Anomalía ST-T</option>
+            <option value="LVH">Hipertrofia ventricular</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Síntomas</legend>
+        <div class="field">
+          <label for="ChestPainType">Tipo de dolor en el pecho</label>
+          <select id="ChestPainType">
+            <option value="ASY">Asintomático</option>
+            <option value="NAP">Dolor no anginoso</option>
+            <option value="ATA">Angina atípica</option>
+            <option value="TA">Angina típica</option>
+          </select>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="ExerciseAngina">Angina inducida por ejercicio</label>
+            <select id="ExerciseAngina">
+              <option value="N">No</option>
+              <option value="Y">Sí</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="Oldpeak">Depresión ST (Oldpeak)</label>
+            <input type="number" step="0.1" id="Oldpeak" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="ST_Slope">Pendiente del segmento ST</label>
+          <select id="ST_Slope">
+            <option value="Up">Ascendente</option>
+            <option value="Flat">Plana</option>
+            <option value="Down">Descendente</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <button type="submit">Predecir riesgo</button>
+    </form>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    document.getElementById('formulario').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const datos = {
+        Age: parseInt(document.getElementById('Age').value),
+        Sex: document.getElementById('Sex').value,
+        ChestPainType: document.getElementById('ChestPainType').value,
+        RestingBP: parseInt(document.getElementById('RestingBP').value),
+        Cholesterol: parseInt(document.getElementById('Cholesterol').value),
+        FastingBS: parseInt(document.getElementById('FastingBS').value),
+        RestingECG: document.getElementById('RestingECG').value,
+        MaxHR: parseInt(document.getElementById('MaxHR').value),
+        ExerciseAngina: document.getElementById('ExerciseAngina').value,
+        Oldpeak: parseFloat(document.getElementById('Oldpeak').value),
+        ST_Slope: document.getElementById('ST_Slope').value
+      };
+
+      const divResultado = document.getElementById('resultado');
+
+      try {
+        const respuesta = await fetch('http://127.0.0.1:8000/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datos)
+        });
+
+        const resultado = await respuesta.json();
+        const probabilidad = (resultado.heart_disease_probability * 100).toFixed(2);
+
+        divResultado.style.display = 'block';
+        if (resultado.prediction === 1) {
+          divResultado.className = 'riesgo-alto';
+          divResultado.innerHTML = `<span class="titulo">Riesgo elevado detectado</span>Probabilidad estimada: ${probabilidad}%`;
+        } else {
+          divResultado.className = 'riesgo-bajo';
+          divResultado.innerHTML = `<span class="titulo">Riesgo bajo</span>Probabilidad estimada: ${probabilidad}%`;
+        }
+      } catch (error) {
+        divResultado.style.display = 'block';
+        divResultado.className = 'riesgo-alto';
+        divResultado.innerHTML = `<span class="titulo">No se pudo conectar</span>Verifica que la API esté corriendo en el puerto 8000.`;
+      }
+    });
+  </script>
+</body>
+</html>
